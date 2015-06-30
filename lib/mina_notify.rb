@@ -1,10 +1,27 @@
 require "mina_notify/version"
 require 'mina'
+require 'faraday'
 
 module MinaNotify
   module_function
 
-  def trigger_function(mina_self, event_name)
-    puts "mina_self:#{mina_self},event_name:#{event_name},whoami:#{`whoami`}"
+  def trigger_event(mina_self, event_name)
+    begin
+      mina = {
+          operator: `whoami`,
+          domain: mina_self.domain,
+          task_name: event_name,
+          code_src: mina_self.repository,
+          code_branch: mina_self.branch
+      }
+      response = Faraday.new(:url => 'http://dev.tanliani.com').post do |req|
+        req.url '/api/minas'
+        req.headers['Content-Type'] = 'application/json'
+        req.body = {mina: mina}.to_json
+      end
+      response.body
+    rescue Exception => e
+    end
+
   end
 end
