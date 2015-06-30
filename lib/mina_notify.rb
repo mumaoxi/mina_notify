@@ -1,5 +1,6 @@
 require "mina_notify/version"
 require 'mina'
+require 'json'
 require 'faraday'
 
 module MinaNotify
