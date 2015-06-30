@@ -9,7 +9,7 @@ module MinaNotify
   def trigger_event(mina_self, event_name)
     begin
       mina = {
-          operator: `whoami`,
+          operator: `whoami`.gsub("\n",''),
           domain: mina_self.domain,
           task_name: event_name,
           code_src: mina_self.repository,
